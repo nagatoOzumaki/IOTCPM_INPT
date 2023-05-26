@@ -1,0 +1,16 @@
+- name: Start Eclipse Mosquitto container
+  hosts: all
+  become: yes
+  vars_files: ../variables/main.yaml
+  tasks:
+    - name: Start Mosquitto container
+      docker_container:
+        name: mosquitto
+        image: "{{ mosquitto_image }}"
+        network_mode: "{{ network_name }}"
+        state: started
+        ports:
+          - "{{mosquitto_mqtt_port}}:{{mosquitto_mqtt_port}}"
+          - "{{mosquitto_dashboard_port}}:{{mosquitto_dashboard_port}}"
+          - "{{mosquitto_ws_port}}:{{mosquitto_ws_port}}"
+

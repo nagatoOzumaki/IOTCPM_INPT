@@ -1,0 +1,6 @@
+- import_playbook: docker/docker-environnement.yaml
+- import_playbook: influxdb/influxdb.yaml
+- import_playbook: telegraf/generate-telegraf-config-file.yaml
+- import_playbook: mosquitto/emqx.yaml
+- import_playbook: telegraf/telegraf.yaml
+- import_playbook: grafana/grafana.yaml

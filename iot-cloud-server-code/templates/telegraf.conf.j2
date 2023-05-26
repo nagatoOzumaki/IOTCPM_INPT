@@ -1,0 +1,33 @@
+[agent]
+  interval = "10s"
+  round_interval = true
+  metric_batch_size = 1000
+  metric_buffer_limit = 10000
+  collection_jitter = "0s"
+  flush_interval = "10s"
+  flush_jitter = "0s"
+  precision = ""
+  hostname = ""
+  omit_hostname = false
+[[outputs.influxdb_v2]]
+  urls = ["http://influxdb:8086"]
+  token = "{{influxdb_token}}"
+  organization = "inpt"
+ # namepass = ["temperature"]
+  bucket = "mosquitto"
+ # bucket_tag = "bucket_tag"
+ # user_agent = "telegraf_agent"
+[[outputs.influxdb_v2]]
+  urls = ["http://influxdb:8086"]
+  token = "{{influxdb_token}}"
+  organization = "inpt"
+  #namepass = ["energy"]
+  bucket = "mosquitto"
+  #bucket_tag = "bucket_tag_en"
+[[inputs.mqtt_consumer]]
+  servers = ["tcp://mosquitto:1883"]
+  topics = [
+    "inpt/infrastructure",
+  ]
+  topic_tag = "inpt/infrastructure"
+  data_format = "influx"

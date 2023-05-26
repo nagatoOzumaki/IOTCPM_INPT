@@ -1,0 +1,41 @@
+---
+- hosts: server
+  become: true
+  vars_files: ../variables/main.yaml
+  tasks:
+    - name: generate influx datasource file
+      template:
+        src: ../templates/influx-datasource.j2
+        dest: "{{grafana_datasource_file_path}}"
+
+    - name: Create grafana container
+      docker_container:
+        name: "{{ grafana_container_name }}"
+        image: "{{ grafana_image }}"
+        network_mode: "{{ network_name }}"
+        state: present
+        ports:
+          - "{{ grafana_host_port }}:{{ grafana_container_port }}"
+        env:
+          GF_SECURITY_ADMIN_USER: "{{grafana_admin_user}}"
+          GF_SECURITY_ADMIN_PASSWORD: "{{grafana_admin_password}}"
+         
+        volumes:
+          - "grafana-storage:/var/lib/influxdb2"
+    - name: copy  tlgf config file to tgrf container
+      raw: docker cp {{grafana_datasource_file_path}} {{grafana_container_name}}:/etc/grafana/provisioning/datasources
+   
+    - name: Restart grafana container
+      docker_container:
+        name: "{{ grafana_container_name }}"
+        state: started
+
+
+
+
+
+
+
+
+
+

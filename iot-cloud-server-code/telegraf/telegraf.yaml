@@ -1,0 +1,16 @@
+- name: Run Telegraf container
+  hosts: server
+  vars_files: ../variables/main.yaml 
+  tasks:
+    - name: Start Telegraf container
+      docker_container:
+        name: telegraf
+        image: telegraf:1.24.4
+        state: started
+        restart_policy: always
+        networks:
+          - name: "{{ network_name }}"
+    - name: copy  tlgf config file to tgrf container
+      raw: docker cp {{telegraf_config_file_path}} telegraf:/etc/telegraf
+
+    

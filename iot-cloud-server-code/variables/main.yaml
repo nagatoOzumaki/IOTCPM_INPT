@@ -1,0 +1,32 @@
+# --- global
+network_name: iot_ucm_network
+
+# ---influxdb variables
+influxdb_image: influxdb:2.0
+influxdb_container_name: influxdb
+influxdb_host_port: 8086
+influxdb_container_port: 8086
+influxdb_init_username: admin
+influxdb_init_password: adminadmin
+influxdb_init_org: inpt
+influxdb_init_bucket: mosquitto
+influxdb_init_retention: 1w
+influxdb_init_admin_token: XbyIayjWbl1G4EPdG_t1N3GV7Nw0yBd1u916HHZwwZWja4O4n1u0MZ-hagskZTKjOUbgvX9aq6TZH1qysadXhQ==
+
+# ---- telegraf variables
+telegraf_config_file_path: telegraf.conf
+#------------- mqtt broker
+mosquitto_image: emqx:latest
+mosquitto_mqtt_port: 1883
+mosquitto_dashboard_port: 18083
+mosquitto_ws_port: 8083
+
+
+#--------- grafana
+grafana_datasource_file_path: influx-datasource.json
+grafana_image: grafana/grafana-oss
+grafana_container_name: grafana
+grafana_host_port: 3000
+grafana_container_port: 3000
+grafana_admin_user: myadminuser
+grafana_admin_password: mypassword

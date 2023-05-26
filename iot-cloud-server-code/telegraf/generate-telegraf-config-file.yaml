@@ -1,0 +1,63 @@
+- name: Start Eclipse Mosquitto container
+  hosts: server
+  vars_files: ../variables/main.yaml
+  tasks:
+      - name:
+        uri:
+          url: http://localhost:8086/api/v2/orgs
+          method: GET
+          headers:
+            Authorization: Token {{influxdb_init_admin_token}}
+        register: orgs_result
+      - name: The id of inpt org
+        debug:
+          msg: "{{orgs_result.json.orgs[0].id}}"
+      - name: store org id in var org_id
+        set_fact:
+          org_id: "{{orgs_result.json.orgs[0].id}}"
+
+      - name: Make HTTP POST request
+        vars:
+          INFLUX_ORG_ID: "{{org_id}}"
+        uri:
+          url: http://localhost:8086/api/v2/authorizations
+          method: POST
+          headers:
+            Authorization: "Token {{ influxdb_init_admin_token }}"
+            Content-Type: "application/json"
+          body_format: json
+          body:
+            status: active
+            description: iot-inpt-device
+            orgID: "{{ INFLUX_ORG_ID }}"
+            permissions:
+              - action: read
+                resource:
+                  orgID: "{{ INFLUX_ORG_ID }}"
+                  type: authorizations
+              - action: read
+                resource:
+                  orgID: "{{ INFLUX_ORG_ID }}"
+                  type: buckets
+              - action: write
+                resource:
+                  orgID: "{{ INFLUX_ORG_ID }}"
+                  type: buckets
+                  name: mosquitto
+        register: response
+        failed_when: response.status != 200 and response.status != 201
+
+      - name: Extract token from response
+        set_fact:
+          influx_token: "{{ response.json.token }}"
+
+      - name: Do something with the token
+        debug:
+          msg: "{{influx_token}}"
+
+      - name: generate a telegraf config file
+        template:
+          src: ../templates/telegraf.conf.j2
+          dest: "{{telegraf_config_file_path}}"
+        vars:
+          influxdb_token: "{{influx_token}}"
