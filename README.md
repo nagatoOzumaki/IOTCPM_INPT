@@ -1,6 +1,9 @@
 # IaC-of-IoT-plateform
 This is a repo for provisioning and configuring an IoT infrastructure (IOTCMP) plateform using vagrant and ansible
+Ce repo contient le code pour la mise en place du data pipeline en utilisant vagrant et ansible, Et le code qui contient les algorithme pour entrainer le modele et la prediction de la consommation de l'enrgie au sein de l'INPT.
+ 
 
+ !!! Afin de comprendre la structure de ce repos et localiser les fichiers prière de lire ce qui suit --->
 
 # Le fichier Vagrantfile
 
@@ -19,5 +22,7 @@ This is a repo for provisioning and configuring an IoT infrastructure (IOTCMP) p
     - Le ficher 'dataset' contient un dataset (dataset_sensors.csv) pour une la consommation d'énergie dans la durée entre 2021-05-13 et 2022-05-13.
 
     - Le Script 'convertCsvToLineProtocol.py' est un script qui va convertir le données du format csv au format Line Protocol pour qu'on puisse l'insérer dans influxdb, le resultat sera stocké dans le fichier text 'convertedToLineProtocol.txt' (ce fichier doit avoir une taille < 10 MO, sinon on le reparti sous forme des fichier de taille < 10MG ).
-    
+
+    - Le Notebook python 'predict energy consumption.ipynb' contient le code pour faire le training et la prediction de la consommation d'energie.
+
     -  Le Script EmetData est utilisé pour simuler des capteurs qui envoient les messures vers le broker chaque 5s, on l'a utilisé pour faire la demo .
